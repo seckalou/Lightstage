@@ -1,4 +1,4 @@
-function animate_imgs( img1, img2, scale, hsv, max_intensity, fps )
+function animate_imgs( img1, img2, scale, hsv, max_intensity, fps, out_video )
 %ANIMATE Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -21,14 +21,32 @@ else
     I2=double(img2)/max_intensity;
 end
 
-m(:,1)=im2frame(I1);
-m(:,2)=im2frame(I2);
+f1 = im2frame(I1);
+f2 = im2frame(I2);
+for i = 1 : (10 * fps)
+    if (mod(i , 2) == 0)
+        m(:,i) = f1;
+    else
+        m(:,i) = f2;
+    end
+end
 
 h=gcf;
 scrsz = get(0,'ScreenSize');
 set(h,'OuterPosition',[scrsz(1),scrsz(2),size(I1,2), size(I1,1)]);
 
-movie(h,m,20000,fps,[0 -size(I1,1)/2 0 0]);
+movie(h,m,1,fps,[0 -size(I1,1)/2 0 0]);
+
+movie2avi(m, strcat(out_video,'.avi'), 'compression', 'None');
+
+% m(:,1)=im2frame(I1);
+% m(:,2)=im2frame(I2);
+% 
+% h=gcf;
+% scrsz = get(0,'ScreenSize');
+% set(h,'OuterPosition',[scrsz(1),scrsz(2),size(I1,2), size(I1,1)]);
+% 
+% movie(h,m,20000,fps,[0 -size(I1,1)/2 0 0]);
 
 end
 
